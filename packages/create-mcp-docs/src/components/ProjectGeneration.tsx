@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Text } from "ink";
 import { promises as fs } from "fs";
-import { spawn } from "child_process";
 import path from "path";
 import ora from "ora";
+import { execa } from "execa";
 import { getProjectTemplate, TemplateConfig } from "../utils/templates.js";
 import { type SearchProvider } from "../types.js";
 
@@ -66,36 +66,27 @@ export function ProjectGeneration({
 
         spinner = ora("Installing dependencies with pnpm...").start();
         setStatus("Installing dependencies with pnpm...");
-        const installProcess = spawn("pnpm", ["install"], {
-          cwd: process.cwd(),
-          stdio: "pipe",
-        });
-
-        let errorOutput = "";
-        installProcess.stderr.on("data", (data) => {
-          errorOutput += data.toString();
-        });
-
-        // Handle spawn errors (e.g., pnpm not found)
-        installProcess.on("error", (error) => {
-          spinner.fail("Failed to start pnpm process");
+        try {
+          await execa("pnpm", ["install"], {
+            cwd: projectPath,
+            stdio: "pipe",
+          });
+          spinner.succeed("Dependencies installed successfully");
+          setStatus("✅ Project generated successfully!");
+          setTimeout(onComplete, 1000);
+        } catch (error) {
+          const err = error as Error & {
+            shortMessage?: string;
+            stdout?: string;
+            stderr?: string;
+          };
+          spinner.fail("Failed to install dependencies");
           setStatus(
-            `Error starting pnpm process: ${error.message}\nPlease ensure pnpm is installed and in your PATH.`
+            `Error installing dependencies. ${
+              err.shortMessage || err.message
+            }`
           );
-        });
-
-        installProcess.on("close", (code) => {
-          if (code === 0) {
-            spinner.succeed("Dependencies installed successfully");
-            setStatus("✅ Project generated successfully!");
-            setTimeout(onComplete, 1000);
-          } else {
-            spinner.fail("Failed to install dependencies");
-            setStatus(
-              `Error installing dependencies. Exit code: ${code}\n${errorOutput}`
-            );
-          }
-        });
+        }
       } catch (error) {
         spinner.fail("Project generation failed");
         if (error instanceof Error) {

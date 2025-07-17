@@ -53,10 +53,12 @@ export function generatePackageJson(config: TemplateConfig): string {
     dependencies: {
       "@agentdesk/mcp-docs": mcpDocsDep,
       "@modelcontextprotocol/sdk": "^1.15.1",
+      "@mozilla/readability": "^0.5.0",
       zod: "^3.23.8",
     },
     devDependencies: {
       "@types/node": "^20.0.0",
+      dotenv: "^16.4.5",
       typescript: "^5.0.4",
       vitest: "^1.0.0",
     },
