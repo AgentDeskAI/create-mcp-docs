@@ -5,14 +5,24 @@ import { validateProjectName, validateDescription } from '../types.js';
 
 interface ProjectSetupProps {
   onSubmit: (name: string, description: string) => void;
+  projectName?: string;
 }
 
-export function ProjectSetup({ onSubmit }: ProjectSetupProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+export function ProjectSetup({
+  onSubmit,
+  projectName: initialProjectName,
+}: ProjectSetupProps) {
+  const [name, setName] = useState(initialProjectName || '');
+  const [description, setDescription] = useState('');
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
   const [descError, setDescError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialProjectName) {
+      setIsDescriptionFocused(true);
+    }
+  }, [initialProjectName]);
 
   const handleNameSubmit = () => {
     const validation = validateProjectName(name);
@@ -37,15 +47,17 @@ export function ProjectSetup({ onSubmit }: ProjectSetupProps) {
   return (
     <Box flexDirection="column">
       <Text bold>📝 Project Setup</Text>
-      <Box marginTop={1}>
-        <Text>Enter project name: </Text>
-        <TextInput
-          value={name}
-          onChange={setName}
-          focus={!isDescriptionFocused}
-          onSubmit={handleNameSubmit}
-        />
-      </Box>
+      {!initialProjectName && (
+        <Box marginTop={1}>
+          <Text>Enter project name: </Text>
+          <TextInput
+            value={name}
+            onChange={setName}
+            focus={!isDescriptionFocused}
+            onSubmit={handleNameSubmit}
+          />
+        </Box>
+      )}
       {nameError && (
         <Box marginTop={1}>
           <Text color="red">❌ {nameError}</Text>

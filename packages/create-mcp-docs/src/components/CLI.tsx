@@ -19,50 +19,55 @@ type Step =
   | "generating"
   | "success";
 
-export function CLI() {
-  const [step, setStep] = useState<Step>("projectSetup");
-  const [projectName, setProjectName] = useState("");
-  const [description, setDescription] = useState("");
+export function CLI({ projectName: initialProjectName, directory }: CLIProps) {
+  const [step, setStep] = useState<Step>(
+    initialProjectName ? 'urlCollector' : 'projectSetup'
+  );
+  const [projectName, setProjectName] = useState(initialProjectName || '');
+  const [description, setDescription] = useState('');
   const [urls, setUrls] = useState<string[]>([]);
-  const [providerType, setProviderType] = useState<SearchProvider>("vectra");
+  const [providerType, setProviderType] = useState<SearchProvider>('vectra');
 
   const handleProjectSetupSubmit = (name: string, desc: string) => {
     setProjectName(name);
     setDescription(desc);
-    setStep("urlCollector");
+    setStep('urlCollector');
   };
 
   const handleUrlCollectorSubmit = (collectedUrls: string[]) => {
     setUrls(collectedUrls);
-    setStep("providerSelector");
+    setStep('providerSelector');
   };
 
-  const handleProviderSelect = (provider: "vectra" | "flexsearch") => {
+  const handleProviderSelect = (provider: 'vectra' | 'flexsearch') => {
     setProviderType(provider);
-    setStep("generating");
+    setStep('generating');
   };
 
   return (
     <Box flexDirection="column">
-      {step === "projectSetup" && (
-        <ProjectSetup onSubmit={handleProjectSetupSubmit} />
+      {step === 'projectSetup' && (
+        <ProjectSetup
+          onSubmit={handleProjectSetupSubmit}
+          projectName={projectName}
+        />
       )}
-      {step === "urlCollector" && (
+      {step === 'urlCollector' && (
         <URLCollector onSubmit={handleUrlCollectorSubmit} />
       )}
-      {step === "providerSelector" && (
+      {step === 'providerSelector' && (
         <ProviderSelector onSelect={handleProviderSelect} />
       )}
-      {step === "generating" && (
+      {step === 'generating' && (
         <ProjectGeneration
           projectName={projectName}
           description={description}
           urls={urls}
           providerType={providerType}
-          onComplete={() => setStep("success")}
+          onComplete={() => setStep('success')}
         />
       )}
-      {step === "success" && <Success projectName={projectName} />}
+      {step === 'success' && <Success projectName={projectName} />}
     </Box>
   );
 } 

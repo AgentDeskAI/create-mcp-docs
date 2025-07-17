@@ -1,6 +1,6 @@
 {
   "name": "create-mcp-docs",
-  "version": "0.1.15",
+  "version": "0.1.19",
   "description": "CLI tool to create MCP documentation servers",
   "main": "dist/index.js",
   "type": "module",
@@ -12,7 +12,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "vitest",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "postinstall": "node scripts/diagnose.js"
   },
   "keywords": [
     "mcp",
