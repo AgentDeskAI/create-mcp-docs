@@ -35,9 +35,16 @@ export function ProjectSetup({
   };
 
   const handleDescriptionSubmit = () => {
-    const validation = validateDescription(description);
-    if (!validation.isValid) {
-      setDescError(validation.error || "Invalid description");
+    const nameValidation = validateProjectName(name);
+    if (!nameValidation.isValid) {
+      setNameError(nameValidation.error || 'Invalid project name');
+      return;
+    }
+    setNameError(null);
+
+    const descValidation = validateDescription(description);
+    if (!descValidation.isValid) {
+      setDescError(descValidation.error || 'Invalid description');
       return;
     }
     setDescError(null);
