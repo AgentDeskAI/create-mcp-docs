@@ -1,0 +1,48 @@
+{
+  "name": "@agentdesk/mcp-docs",
+  "version": "0.1.0",
+  "private": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./heuristics": {
+      "types": "./dist/heuristics/index.d.ts",
+      "import": "./dist/heuristics/index.js"
+    },
+    "./templates": {
+      "types": "./dist/templates/index.d.ts",
+      "import": "./dist/templates/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "prepublishOnly": "pnpm build"
+  },
+  "devDependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@types/jsdom": "^21.1.6",
+    "@types/turndown": "^5.0.5",
+    "typescript": "^5.0.4",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "@types/micromatch": "^4.0.9",
+    "crawlee": "^3.13.10",
+    "flexsearch": "^0.7.43",
+    "js-tiktoken": "^1.0.20",
+    "jsdom": "^23.2.0",
+    "micromatch": "^4.0.8",
+    "playwright": "^1.44.1",
+    "turndown": "^7.2.0",
+    "vectra": "^0.10.0",
+    "wink-bm25-text-search": "^3.1.2",
+    "zod": "^3.25.76"
+  }
+}
